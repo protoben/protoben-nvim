@@ -1,0 +1,4 @@
+*.bak
+*.sw?
+init.lua
+lua/secrets
