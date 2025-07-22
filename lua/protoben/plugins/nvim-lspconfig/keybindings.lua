@@ -4,23 +4,22 @@ return function(ev)
   require('which-key').add(
     {
       {
-        -- Override keyword completion from protoben/init.lua
-        '<C-tab>',
-        '<C-x><C-o>',
-        desc = 'Omnicomplete',
-        mode = 'i',
+        '<leader>rn',
+        vim.lsp.buf.rename,
+        desc = 'Rename',
       },
       {
-        'gD',
-        vim.lsp.buf.declaration,
-        desc = 'Go to declaration',
-        mode = 'n',
+        '<leader>ca',
+        vim.lsp.buf.code_action,
+        desc = 'Code action',
+        mode = { 'n', 'v' },
       },
       {
-        'gd',
-        vim.lsp.buf.definition,
-        desc = 'Go to definition',
-        mode = 'n',
+        '<leader>F',
+        function()
+          vim.lsp.buf.format { async = true }
+        end,
+        desc = 'Format buffer',
       },
       {
         '<C-k>',
@@ -32,13 +31,67 @@ return function(ev)
         'K',
         vim.lsp.buf.signature_help,
         desc = 'Signature help',
-        mode = 'n',
+      },
+      -- LSP gotos
+      {
+        'gr',
+        group = 'LSP gotos',
       },
       {
-        'gi',
+        'grd',
+        vim.lsp.buf.definition,
+        desc = 'Go to definition',
+      },
+      {
+        'grD',
+        vim.lsp.buf.declaration,
+        desc = 'Go to declaration',
+      },
+      {
+        'grr',
+        vim.lsp.buf.references,
+        desc = 'References',
+      },
+      {
+        'gri',
         vim.lsp.buf.implementation,
         desc = 'Go to implementation',
         mode = 'n',
+      },
+      {
+        'grt',
+        vim.lsp.buf.type_definition,
+        desc = 'Go to type definition',
+      },
+      {
+        'grc',
+        vim.lsp.buf.incoming_calls,
+        desc = 'Incoming calls',
+      },
+      {
+        'grC',
+        vim.lsp.buf.outgoing_calls,
+        desc = 'Outgoing calls',
+      },
+      {
+        'grh',
+        vim.lsp.buf.typehierarchy,
+        desc = 'Type hierarchy',
+      },
+      {
+        'grH',
+        vim.lsp.buf.document_highlight,
+        desc = 'Document highlight',
+      },
+      {
+        'grs',
+        vim.lsp.buf.document_symbol,
+        desc = 'Document symbol',
+      },
+      -- Workspace
+      {
+        '<leader>w',
+        group = 'LSP workspace',
       },
       {
         '<leader>wa',
@@ -58,38 +111,6 @@ return function(ev)
           print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
         end,
         desc = 'List workspace directories',
-        mode = 'n',
-      },
-      {
-        '<leader>D',
-        vim.lsp.buf.type_definition,
-        desc = 'Go to type definition',
-        mode = 'n',
-      },
-      {
-        '<leader>rn',
-        vim.lsp.buf.rename,
-        desc = 'Rename',
-        mode = 'n',
-      },
-      {
-        '<leader>ca',
-        vim.lsp.buf.code_action,
-        desc = 'Code action',
-        mode = { 'n', 'v' },
-      },
-      {
-        'gr',
-        vim.lsp.buf.references,
-        desc = 'References',
-        mode = 'n',
-      },
-      {
-        '<leader>F',
-        function()
-          vim.lsp.buf.format { async = true }
-        end,
-        desc = 'Format buffer',
         mode = 'n',
       },
     },

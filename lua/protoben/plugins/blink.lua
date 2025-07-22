@@ -1,8 +1,21 @@
 -- vim: ts=2 sw=2 expandtab
 
+-- Check if there are non-whitespace characters before the cursor
+local has_words_before = function()
+  local col = vim.api.nvim_win_get_cursor(0)[2]
+  if col == 0 then
+    return false
+  end
+  local line = vim.api.nvim_get_current_line()
+  return line:sub(col, col):match('%s') == nil
+end
+
 return {
   {
     'saghen/blink.cmp',
+    dependencies = {
+      'mikavilpas/blink-ripgrep.nvim',
+    },
     version = '1.*',
     opts = {
       keymap = {
@@ -12,52 +25,77 @@ return {
         -- If completion hasn't been triggered yet, insert the first suggestion; if it has, cycle to the next suggestion.
         ['<Tab>'] = {
           function(cmp)
-            local has_words_before = function()
-              local col = vim.api.nvim_win_get_cursor(0)[2]
-              if col == 0 then
-                return false
-              end
-              local line = vim.api.nvim_get_current_line()
-              return line:sub(col, col):match("%s") == nil
+            if has_words_before() then
+              return cmp.show_and_insert()
             end
+          end,
+          function(cmp)
             if has_words_before() then
               return cmp.insert_next()
             end
           end,
           'fallback',
         },
-        -- Navigate to the previous suggestion or cancel completion if currently on the first one.
-        ['<S-Tab>'] = {
-          'insert_prev',
+        ['<S-Tab>'] = { 'insert_prev', 'fallback' },
+        ['<Esc>'] = { 'cancel', 'fallback' },
+        ['<CR>'] = { 'accept', 'select_and_accept', 'fallback' },
+        ['<C-Space>'] = { 'show', 'show_documentation', 'hide_documentation', 'fallback' },
+        ['<C-n>'] = { 'select_next', 'fallback' },
+        ['<C-p>'] = { 'select_prev', 'fallback' },
+        ['<C-y>'] = { 'select_and_accept', 'fallback' },
+        ['<C-e>'] = { 'hide', 'fallback' },
+        ['<C-k>'] = { 'show_signature', 'hide_signature', 'fallback' },
+        ['<C-f>'] = { 'scroll_documentation_down', 'fallback' },
+        ['<C-b>'] = { 'scroll_documentation_up', 'fallback' },
+        ['<Up>'] = { 'select_prev', 'fallback' },
+        ['<Down>'] = { 'select_next', 'fallback' },
+      },
+      cmdline = {
+        enabled = true,
+        keymap = {
+          preset = 'inherit',
+
+          -- The above emacs-like completion doesn't seem to work for cmdline
+          ['<Tab>'] = { 'show_and_insert', 'insert_next', 'fallback' },
+          ['<CR>'] = { 'accept', 'select_and_accept', 'fallback' },
+          ['<Esc>'] = {
+            'cancel',
+            function(cmp)
+              vim.api.nvim_input('<C-c>')
+            end,
+            --'fallback', -- Fallback uses vi compatibility mode of accepting cmdline
+          },
         },
       },
-      cmdline = { enabled = false },
 
       completion = {
-        menu = { enabled = false },
+        menu = {
+          enabled = true,
+          auto_show = false,
+        },
         list = { selection = { preselect = false }, cycle = { from_top = false } },
         documentation = { auto_show = false },
       },
-
-      appearance = {
-        -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-        -- Adjusts spacing to ensure icons are aligned
-        nerd_font_variant = 'mono'
-      },
-
-      -- Default list of enabled providers defined so that you can extend it
-      -- elsewhere in your config, without redefining it, due to `opts_extend`
+      appearance = { nerd_font_variant = 'mono' },
       sources = {
-        default = { 'lsp', 'path', 'snippets', 'buffer' },
+        default = { 'lsp', 'buffer', 'ripgrep' },
+        providers = {
+          ripgrep = {
+            module = 'blink-ripgrep',
+            name = 'Ripgrep',
+          }
+        }
       },
-
-      -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
-      -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
-      -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
-      --
-      -- See the fuzzy documentation for more information
-      fuzzy = { implementation = "prefer_rust" }
+      fuzzy = {
+        implementation = 'prefer_rust',
+        sorts = {
+          --'exact',
+          -- defaults
+          'score',
+          'sort_text',
+        },
+      },
     },
-    opts_extend = { "sources.default" }
+    opts_extend = { 'sources.default' },
   }
 }

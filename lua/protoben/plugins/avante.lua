@@ -4,32 +4,50 @@ local exists, secrets = pcall(require, 'secrets.ollama')
 
 -- Load plugin only if secrets are found
 if exists then
-  local llm_model = "qwen3:30b-a3b-q4_K_M"
-  --local llm_model = "deepseek-coder-v2:16b-lite-instruct-q6_K"
-  local embedding_model = "nomic-embed-text:latest"
-  local ollama_url = "http://10.9.8.156:11434"
   return {
     {
       "yetone/avante.nvim",
       lazy = true,
       event = "VeryLazy",
       version = false, -- Never set this value to "*"! Never!
+      init = function()
+        require('which-key').add({
+          {
+            '<leader>a',
+            group = 'Avante',
+          },
+          {
+            '<leader>aC',
+            function()
+              require('avante').get():clear_history()
+            end,
+            mode = 'n',
+            desc = 'avante: clear history',
+          },
+        })
+      end,
       opts = {
-        provider = "ollama",
-        auto_suggestions_provider = nil,
-        cursor_applying_provider = nil,
-        memory_summary_provider = "ollama",
+        provider = "ollama_openai",
+        auto_suggestions_provider = "ollama_openai",
+        cursor_applying_provider = "ollama_openai",
+        memory_summary_provider = "ollama_openai",
         behaviour = {
-          auto_focus_sidebar = true,
-          enable_cursor_planning_mode = true, -- enable cursor planning mode!
-          windows = {
-            position = "smart"
-          }
+          auto_focus_sidebar = false,
+          enable_cursor_planning_mode = true,
+          windows = { position = "smart" },
         },
-        ollama = {
-          endpoint = ollama_url,
-          model = llm_model,
+        mappings = { submit = { insert = '<C-CR>' } },
+        hints = { enabled = false },
+        vendors = {
+          ollama_openai = {
+            __inherited_from = 'openai',
+            api_key = secrets.ollama_api_key,
+            endpoint = secrets.ollama_url .. '/v1/',
+            model = secrets.llm_model,
+            max_completion_tokens = 32768,
+          },
         },
+    ---
       },
       -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
       build = "make",
@@ -43,12 +61,12 @@ if exists then
         "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
         "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
         "ibhagwan/fzf-lua", -- for file_selector provider fzf
-        --"nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
         {
           -- support for image pasting
           "HakonHarnes/img-clip.nvim",
           event = "VeryLazy",
           opts = {
+            mode = 'legacy',
             -- recommended settings
             default = {
               embed_image_as_base64 = false,
@@ -56,8 +74,6 @@ if exists then
               drag_and_drop = {
                 insert_mode = true,
               },
-              -- required for Windows users
-              use_absolute_path = true,
             },
           },
         },

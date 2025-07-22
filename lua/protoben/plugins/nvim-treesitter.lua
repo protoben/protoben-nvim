@@ -21,6 +21,7 @@ return {
         'javascript',
         'typescript',
         'markdown',
+        'html',
       },
     }
   },

@@ -5,7 +5,6 @@ require('which-key').add({
     '<leader>e',
     vim.diagnostic.open_float,
     desc = 'View diagnostic',
-    mode = 'n',
   },
   {
     '[d',
@@ -13,7 +12,6 @@ require('which-key').add({
       vim.diagnostic.jump({count = -1, float = true})
     end,
     desc = 'Goto previous diagnostic',
-    mode = 'n',
   },
   {
     ']d',
@@ -21,13 +19,20 @@ require('which-key').add({
       vim.diagnostic.jump({count = 1, float = true})
     end,
     desc = 'Goto next diagnostic',
-    mode = 'n',
   },
   {
     '<leader>q',
     vim.diagnostic.setloclist,
     desc = 'View diagnostics in loclist',
-    mode = 'n',
+  },
+  {
+    '<C-l>',
+    function()
+      vim.cmd('cclose')
+      vim.cmd('lclose')
+      vim.cmd('nohlsearch')
+    end,
+    desc = 'Clear everything',
   },
   {
     '<S-tab>',

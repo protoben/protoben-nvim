@@ -5,7 +5,7 @@ return {
     'nvim-treesitter/nvim-treesitter-context',
     init = function()
       local plugin = require('treesitter-context')
-      vim.keymap.set("n", "[c", function() plugin.go_to_context(vim.v.count1) end)
+      vim.keymap.set('n', '[c', function() plugin.go_to_context(vim.v.count1) end)
     end,
     opts = {
       enable = true,

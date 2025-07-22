@@ -5,6 +5,7 @@ return {
     'nvim-telescope/telescope.nvim',
     tag = '0.1.3',
     dependencies = {
+      'folke/which-key.nvim',
       'nvim-lua/plenary.nvim',
       'nvim-telescope/telescope-dap.nvim',
     },
@@ -24,7 +25,7 @@ return {
           mode = 'n',
         },
         {
-          '<leader>fg',
+          '<leader>fG',
           builtin.live_grep,
           desc = 'Live grep (needs rg)',
           mode = 'n',
@@ -63,6 +64,47 @@ return {
           '<leader>fr',
           require('telescope').extensions.dap.frames,
           desc = 'Debugger frames',
+          mode = 'n',
+        },
+        {
+          '<leader>fs',
+          builtin.lsp_document_symbols,
+          desc = 'Document symbols',
+          mode = 'n',
+        },
+        {
+          '<leader>fS',
+          builtin.lsp_workspace_symbols,
+          desc = 'Workspace symbols',
+          mode = 'n',
+        },
+        -- Git
+        {
+          '<leader>fg',
+          group = 'Git',
+        },
+        {
+          '<leader>fgb',
+          builtin.git_branches,
+          desc = 'Git branches',
+          mode = 'n',
+        },
+        {
+          '<leader>fgs',
+          builtin.git_status,
+          desc = 'Git status',
+          mode = 'n',
+        },
+        {
+          '<leader>fgl',
+          builtin.git_commits,
+          desc = 'Git commits',
+          mode = 'n',
+        },
+        {
+          '<leader>fgB',
+          builtin.git_bcommits,
+          desc = 'Git current buffer commits',
           mode = 'n',
         },
       })

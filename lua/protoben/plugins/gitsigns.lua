@@ -2,7 +2,60 @@
 
 return {
   {
-    "lewis6991/gitsigns.nvim",
+    'lewis6991/gitsigns.nvim',
+    dependencies = {
+      'folke/which-key.nvim',
+    },
+    init = function()
+      require('which-key').add({
+        {
+          '<leader>g',
+          group = 'Git',
+        },
+        {
+          '<leader>gR',
+          function()
+            require('gitsigns').reset_hunk()
+          end,
+          desc = 'Reset hunk',
+        },
+        {
+          '<leader>gb',
+          function()
+            require('gitsigns').blame_line()
+          end,
+          desc = 'Blame line',
+        },
+        {
+          '<leader>gB',
+          function()
+            require('gitsigns').blame()
+          end,
+          desc = 'Open blame window',
+        },
+        {
+          '<leader>gd',
+          function()
+            require('gitsigns').preview_hunk()
+          end,
+          desc = 'Preview hunk',
+        },
+        {
+          ']g',
+          function()
+            require('gitsigns').nav_hunk('next')
+          end,
+          desc = 'Next git hunk',
+        },
+        {
+          '[g',
+          function()
+            require('gitsigns').nav_hunk('prev')
+          end,
+          desc = 'Previous git hunk',
+        },
+      })
+    end,
     opts = {
       signs = {
         add          = { text = '┃' },
