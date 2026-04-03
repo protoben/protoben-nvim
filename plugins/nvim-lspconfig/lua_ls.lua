@@ -1,6 +1,6 @@
 -- vim: ts=2 sw=2 expandtab
 
-require('lspconfig').lua_ls.setup({
+vim.lsp.config('lua_ls', {
   settings = {
     Lua = {
       telemetry = {

@@ -34,14 +34,18 @@ return {
       })
     end,
     config = function()
+      vim.lsp.enable('lua_ls')
+      vim.lsp.enable('rust-analyzer')
+      vim.lsp.enable('clangd')
+      vim.lsp.enable('basedpyright')
+      vim.lsp.enable('elixirls')
+      vim.lsp.enable('ts_ls')
+      vim.lsp.enable('zls')
+      vim.lsp.enable('bashls')
+
       require('protoben.plugins.nvim-lspconfig.lua_ls')
-      require('protoben.plugins.nvim-lspconfig.rust-analyzer')
-      require('protoben.plugins.nvim-lspconfig.clangd')
       require('protoben.plugins.nvim-lspconfig.basedpyright')
       require('protoben.plugins.nvim-lspconfig.elixirls')
-      require('protoben.plugins.nvim-lspconfig.ts_ls')
-      require('protoben.plugins.nvim-lspconfig.zls')
-      require('protoben.plugins.nvim-lspconfig.bashls')
     end,
   },
 }
